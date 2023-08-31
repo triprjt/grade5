@@ -71,29 +71,48 @@ export class IBaseService {
     const response = await this.axiosInstance.get<T>(this.path, config);
     return response.data;
   }
-  protected async getOne<T>(id: number | string, config?: AxiosRequestConfig): Promise<T> {
+  protected async getOne<T>(
+    id: number | string,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     const response = await this.axiosInstance.get<T>(this.path + id, config);
     return response.data;
   }
-  protected async patch<T>(id: number | string, config?: AxiosRequestConfig): Promise<T> {
+  protected async patch<T>(
+    id: number | string,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     const response = await this.axiosInstance.patch<T>(this.path + id, config);
     return response.data;
   }
-  protected async custom<T>(path: string, config?: AxiosRequestConfig): Promise<T> {
+  protected async custom<T>(
+    path: string,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     const response = await this.axiosInstance(path, config);
     return response.data;
   }
 
   // Public method for making POST requests
-  protected async post<T>(data: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  protected async post<T>(
+    data: any,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
     const response = await this.axiosInstance.post<T>(this.path, data, {
       ...config,
       method: "post",
     });
     return response;
   }
-  protected async put<T>(data: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-    const response = await this.axiosInstance.put<AxiosResponse<T>>(this.path, data, config);
+  protected async put<T>(
+    data: any,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
+    const response = await this.axiosInstance.put<AxiosResponse<T>>(
+      this.path,
+      data,
+      config
+    );
     return response.data;
   }
   protected async _put<T>(
@@ -101,7 +120,11 @@ export class IBaseService {
     data: any,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse<T>> {
-    const response = await this.axiosInstance.put<AxiosResponse<T>>(path, data, config);
+    const response = await this.axiosInstance.put<AxiosResponse<T>>(
+      path,
+      data,
+      config
+    );
     return response.data;
   }
   protected getToken() {

@@ -12,12 +12,11 @@ import Typography from "@mui/material/Typography";
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { IModule } from "@MyTypes/module.type";
 
 import { Sdk } from "@/services/sdk.service";
 
 export default function SubjectDetails() {
-  const [expanded, setExpanded] = useState<string | false>(false);
+  const [expanded, setExpanded] = useState<string | false | undefined>(false);
 
   const [chapterId, setChapterId] = useState<number | null>();
   const id = useParams();
@@ -67,16 +66,21 @@ export default function SubjectDetails() {
   const getModuleColor = useCallback(
     (id: number) => {
       if (!moduleData) return;
-      const sortedModules = moduleData.sort((a, b) => a.id - b.id);
-      const latCompleted = sortedModules.findIndex(
-        (el, idx, arr) =>
-          el.is_completed == true &&
-          (idx === arr.length - 1 || arr[idx + 1].is_completed == false)
-      );
+      const sortedModuleData = moduleData.sort((a, b) => a.id - b.id);
+      let latCompleted = -1; // Initialize to -1, meaning "not found"
+      for (let i = sortedModuleData.length - 1; i >= 0; i--) {
+        if (sortedModuleData[i].is_completed === true) {
+          latCompleted = i;
+          break;
+        }
+      }
+
       const tIndex = latCompleted + 1;
-      const targetIndex = sortedModules.findIndex((el: IModule) => el.id == id); // specify the type here
+      const targetIndex = moduleData
+        .sort((a, b) => a.id - b.id)
+        .findIndex((el) => el.id == id);
       if (tIndex == targetIndex) return "orange";
-      const target = moduleData.find((el: IModule) => el.id == id); // specify the type here
+      const target = moduleData.find((el) => el.id == id);
       if (target?.is_completed) return "green";
       else return "ghostwhite";
     },
@@ -104,10 +108,14 @@ export default function SubjectDetails() {
           return (
             <Accordion
               expanded={expanded === chapter.id?.toString()}
-              onChange={(v) => setExpanded(chapter.id?.toString())}
+              onChange={(v) => {
+                if (expanded == chapter.id?.toString())
+                  return setExpanded(undefined);
+                else return setExpanded(chapter.id?.toString());
+              }}
               key={chapter.id}
               disabled={isLocked(idx)}
-              onClick={() => setChapterId(chapter.id)}
+              onClick={() => !isLocked(idx) && setChapterId(chapter.id)}
             >
               <AccordionSummary
                 sx={{

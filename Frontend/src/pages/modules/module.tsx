@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Loading } from "@components";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import BookIcon from "@mui/icons-material/Book";
 import { Button, Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -24,7 +25,9 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
-
+import appRoutes from "@constants/appRoutes";
+import BungalowIcon from "@mui/icons-material/Bungalow";
+import { Padding } from "@mui/icons-material";
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
@@ -55,6 +58,7 @@ function a11yProps(index: number) {
 export default function ModuleDetails() {
   const id = useParams();
   const [value, setValue] = React.useState(0);
+  const subjectId = JSON.parse(localStorage.getItem("_subject_id") || "");
   const navigate = useNavigate();
   const { data, isLoading, refetch } = useQuery(
     ["get-module-details", id.id],
@@ -76,7 +80,8 @@ export default function ModuleDetails() {
     (type: IContentType, _currentValue: number) => {
       const target = data?.find((el) => el.type == type);
       if (target?.body.is_completed) return "#62e6b1";
-      else if (value == _currentValue && !target?.body.is_completed) return "#f27629";
+      else if (value == _currentValue && !target?.body.is_completed)
+        return "#f27629";
       else return "#5640e8";
     },
     [data]
@@ -85,77 +90,111 @@ export default function ModuleDetails() {
   if (isLoading) return <Loading />;
 
   return (
-    <Box sx={{ width: "90%", margin: "auto", p: 6 }}>
-      <Button onClick={() => navigate(-1)} startIcon={<ArrowBackIcon />}>
-        back
-      </Button>
-      <Stack direction={"row"}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-            orientation="vertical"
-            textColor="inherit"
+    <Box sx={{ overflowX: "hidden" }}>
+      <Stack direction={"row"} p={3} justifyContent={"space-between"}>
+        <Stack direction={"row"}>
+          <Button onClick={() => navigate("/")} startIcon={<BungalowIcon />}>
+            Home
+          </Button>
+
+          <Button
+            variant="text"
+            onClick={() => navigate(appRoutes._subject_details(+subjectId))}
+            startIcon={<BookIcon />}
           >
-            <Tab
-              label="Text"
-              {...a11yProps(0)}
-              sx={{
-                bgcolor: getColor("text", 0),
-              }}
-            />
-            <Tab
-              sx={{
-                bgcolor: getColor("image", 1),
-                mt: 1,
-              }}
-              disabled={!textModule?.body.is_completed}
-              label="Images"
-              {...a11yProps(1)}
-            />
-            <Tab
-              sx={{
-                bgcolor: getColor("video", 2),
-                mt: 1,
-              }}
-              disabled={!textModule?.body.is_completed || !imageModule?.body.is_completed}
-              label="Videos"
-              {...a11yProps(2)}
-            />
-            <Tab
-              sx={{
-                bgcolor: getColor("mcq", 3),
-                mt: 1,
-              }}
-              disabled={
-                !textModule?.body.is_completed ||
-                !imageModule?.body.is_completed ||
-                !videoModule?.body.is_completed
-              }
-              label="Mcq"
-              {...a11yProps(3)}
-            />
-          </Tabs>
-        </Box>
-        <Box>
-          <CustomTabPanel value={value} index={0}>
-            <TextModule {...textModule} refetch={refetch} setValue={setValue} />
-          </CustomTabPanel>
+            chapter list
+          </Button>
+        </Stack>
 
-          <CustomTabPanel value={value} index={1}>
-            <ImageModule {...imageModule} refetch={refetch} setValue={setValue} />
-          </CustomTabPanel>
-
-          <CustomTabPanel value={value} index={2}>
-            <VIdeoModule {...videoModule} refetch={refetch} setValue={setValue} />
-          </CustomTabPanel>
-
-          <CustomTabPanel value={value} index={3}>
-            <McqModule {...mcqModule} refetch={refetch} setValue={setValue} />
-          </CustomTabPanel>
-        </Box>
+        <Button variant="text" onClick={() => navigate(-1)}>
+          back
+        </Button>
       </Stack>
+
+      <Box sx={{ width: "90%", margin: "auto", p: 6 }}>
+        <Stack direction={"row"}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              orientation="vertical"
+              textColor="inherit"
+            >
+              <Tab
+                label="Text"
+                {...a11yProps(0)}
+                sx={{
+                  bgcolor: getColor("text", 0),
+                }}
+              />
+              <Tab
+                sx={{
+                  bgcolor: getColor("image", 1),
+                  mt: 1,
+                }}
+                disabled={!textModule?.body.is_completed}
+                label="Images"
+                {...a11yProps(1)}
+              />
+              <Tab
+                sx={{
+                  bgcolor: getColor("video", 2),
+                  mt: 1,
+                }}
+                disabled={
+                  !textModule?.body.is_completed ||
+                  !imageModule?.body.is_completed
+                }
+                label="Videos"
+                {...a11yProps(2)}
+              />
+              <Tab
+                sx={{
+                  bgcolor: getColor("mcq", 3),
+                  mt: 1,
+                }}
+                disabled={
+                  !textModule?.body.is_completed ||
+                  !imageModule?.body.is_completed ||
+                  !videoModule?.body.is_completed
+                }
+                label="Mcq"
+                {...a11yProps(3)}
+              />
+            </Tabs>
+          </Box>
+          <Box>
+            <CustomTabPanel value={value} index={0}>
+              <TextModule
+                {...textModule}
+                refetch={refetch}
+                setValue={setValue}
+              />
+            </CustomTabPanel>
+            <div>
+              <CustomTabPanel value={value} index={1}>
+                <ImageModule
+                  {...imageModule}
+                  refetch={refetch}
+                  setValue={setValue}
+                />
+              </CustomTabPanel>
+
+              <CustomTabPanel value={value} index={2}>
+                <VIdeoModule
+                  {...videoModule}
+                  refetch={refetch}
+                  setValue={setValue}
+                />
+              </CustomTabPanel>
+            </div>
+            <CustomTabPanel value={value} index={3}>
+              <McqModule {...mcqModule} refetch={refetch} setValue={setValue} />
+            </CustomTabPanel>
+          </Box>
+        </Stack>
+      </Box>
     </Box>
   );
 }

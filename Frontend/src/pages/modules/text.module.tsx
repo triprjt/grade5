@@ -1,9 +1,10 @@
-import { LinearProgress, Stack, Typography } from "@mui/material";
+import LinearProgress from "@mui/joy/LinearProgress";
+import Typography from "@mui/joy/Typography";
+import { Stack } from "@mui/material";
 import { IContent } from "@MyTypes/content.type";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ProgressBar } from "react-toastify/dist/components";
 
 import { Sdk } from "@/services/sdk.service";
 
@@ -81,8 +82,36 @@ export default function TextModule({
 
   return (
     <>
-      <LinearProgress variant="determinate" value={scrollPercentage} />
-      <Stack ref={containerRef} p={2} height={"50vh"} sx={{ overflowY: "auto" }}>
+      <LinearProgress
+        determinate
+        variant="outlined"
+        color="success"
+        size="sm"
+        thickness={32}
+        value={scrollPercentage}
+        sx={{
+          "--LinearProgress-radius": "0px",
+          "--LinearProgress-progressThickness": "24px",
+          boxShadow: "sm",
+          borderColor: "neutral.500",
+          mb: 2,
+        }}
+      >
+        <Typography
+          level="body-xs"
+          fontWeight="xl"
+          textColor="common.black"
+          sx={{ mixBlendMode: "difference" }}
+        >
+          PROGRESS… {`${Math.round(scrollPercentage)}%`}
+        </Typography>
+      </LinearProgress>
+      <Stack
+        ref={containerRef}
+        p={2}
+        height={"50vh"}
+        sx={{ overflowY: "auto" }}
+      >
         <Typography>{body?.text}</Typography>
       </Stack>
     </>

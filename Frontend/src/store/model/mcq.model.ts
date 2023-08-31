@@ -22,6 +22,17 @@ const mcqModel = createModel<IRootModel>()({
         answeredValues: [...state.answeredValues, index],
       };
     },
+    _bulkhandleAnsweredValues(state, index) {
+      return {
+        ...state,
+        answeredValues: [...state.answeredValues, ...index],
+      };
+    },
+    reset(state) {
+      return {
+        ...initialState,
+      };
+    },
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   effects: (dispatch) => ({}),

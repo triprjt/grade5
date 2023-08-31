@@ -13,6 +13,7 @@ export default function SubjectCard(prop: ISubject) {
   const handleCardClick = () => {
     if (prop.id === 1) {
       navigate(apitRoutes._subject_details(prop.id));
+      localStorage.setItem("_subject_id", prop.id?.toString());
     } else {
       navigate("/");
     }

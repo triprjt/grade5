@@ -18,6 +18,7 @@
     "@mui/material": "^5.14.7",
     "@rematch/core": "^2.2.0",
     "@rematch/immer": "^2.1.3",
+    "@mui/joy": "^5.0.0-beta.4",
     "@rematch/loading": "^2.1.2",
     "@rematch/persist": "^2.1.2",
     "@rematch/select": "^3.1.2",

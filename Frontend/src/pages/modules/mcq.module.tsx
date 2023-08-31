@@ -6,9 +6,8 @@ import { Loading } from "@components";
 import appRoutes from "@constants/appRoutes";
 import { Button, Checkbox, Stack, Typography } from "@mui/material";
 import { IContent, IQuestion } from "@MyTypes/content.type";
-import { IModule } from "@MyTypes/module.type";
-import { IChapter } from "@MyTypes/subject.type";
 import { useMemo, useState } from "react";
+import React from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -107,7 +106,7 @@ export default function McqModule({
     dispatch.mcqModel.handleIndex(index - 1);
   };
   const handleNext = () => {
-    if (index + 1 > choices.length - 1) return;
+    if (index + 1 >= choices.length - 1) return;
     dispatch.mcqModel.handleIndex(index + 1);
   };
 
@@ -150,7 +149,8 @@ export default function McqModule({
     const isAllCompleted = sortedModule?.find((el) => el.is_completed == false);
 
     if (!sortedModule) return;
-    if (!isAllCompleted?.id || isAllCompleted.id !== +(id || 0)) {
+
+    if (!isAllCompleted?.id || isAllCompleted?.id !== +(id || 0)) {
       Sdk.subject.updateChapterProgress(+chapter_id);
       return navigate(appRoutes._subject_details(JSON.parse(subjectId || "")));
     }
@@ -161,17 +161,26 @@ export default function McqModule({
       const targetIndex = currentModuleIndex + 1;
       if (targetIndex > sortedModule?.length || 0) return;
       setValue(0);
+      Sdk.subject.updateChapterProgress(+chapter_id);
       return navigate(appRoutes._module_details(sortedModule[targetIndex].id));
     }
   };
+  React.useEffect(() => {
+    dispatch.mcqModel.reset();
+    if (currentModule?.is_completed) {
+      const values = choices.map((_, idx) => idx);
+      dispatch.mcqModel._bulkhandleAnsweredValues(values);
+    }
+  }, [choices?.length, body]);
+
   if (isLoading || isModuleLoading) return <Loading />;
-  // console.log(answeredArray, "answeredArray");
+
   return (
     <Stack gap={2} p={2} alignItems={"start"}>
       {index + 1 - 1 > 0 && (
         <Button onClick={handleBack}>previous question</Button>
       )}
-      {answeredArray?.includes(index) ? (
+      {currentModule?.is_completed || answeredArray?.includes(index) ? (
         <Button onClick={handleNext}>next question</Button>
       ) : (
         ""
@@ -182,10 +191,18 @@ export default function McqModule({
         </Typography>
         <Stack>
           {choices.map((el, idx) => {
+            const target = body?.questions?.find(
+              (f) => f[`${el?.qId as keyof IQuestion}`]
+            );
+
             return (
               <Stack key={el.q} direction={"row"} alignItems={"center"}>
                 <Checkbox
-                  checked={choiceIndex == idx + 1}
+                  checked={
+                    currentModule?.is_completed
+                      ? target?.correct_choice == idx
+                      : choiceIndex == idx + 1
+                  }
                   value={{ ...el, idx: idx + 1 }}
                   onChange={() => setChoiceIndex(idx + 1)}
                 />
@@ -228,7 +245,7 @@ export default function McqModule({
               } else updateModule();
             }}
           >
-            {currentModule?.is_completed ? "next Module" : "complete module"}
+            {currentModule?.is_completed ? "Next Module" : "complete module"}
           </Button>
         ) : (
           ""

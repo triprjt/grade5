@@ -1,4 +1,5 @@
 const apiUrl = "https://web-production-fef1.up.railway.app/api";
+// const apiUrl = "http://127.0.0.1:8000/api";
 export default apiUrl;
 
 export const apiPaths = Object.freeze({

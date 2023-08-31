@@ -38,7 +38,11 @@ export default function ImageModule(
   };
 
   return (
-    <Box pl={12} width={"70rem"} margin={"auto"}>
+    <Box
+      pl={{ xs: 2, sm: 12 }}
+      width={{ xs: "16rem", sm: "50rem" }}
+      marginX={"auto"}
+    >
       <Swiper
         {...({
           modules: [Navigation, Pagination, Scrollbar, A11y],
@@ -54,7 +58,7 @@ export default function ImageModule(
           return (
             <SwiperSlide key={el}>
               <Box
-                height={"20rem"}
+                height={{ xs: "15rem", sm: "25rem" }}
                 width={"100%"}
                 sx={{
                   backgroundImage: `url(${el})`,

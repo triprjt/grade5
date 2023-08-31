@@ -13,20 +13,24 @@ export default function VIdeoModule(
 ) {
   return (
     <Box
-      height={"100%"}
-      width={"100%"}
+      pl={{ xs: 0.2, sm: 12 }}
+      width={{ xs: "12rem", sm: "50rem" }}
+      height={{ xs: "15rem", sm: "25rem" }}
       display={"flex"}
       justifyContent={"center"}
       alignItems={"center"}
     >
       <ReactPlayer
-        width={"82rem"}
-        height={"27rem"}
+        height={"100%"}
+        width={"100%"}
         loop={false}
         controls
         onEnded={() => {
           if (!prop?.body?.is_completed)
-            Sdk.module.content.updateModuleContent(Number(prop?.body?.id), prop?.type || "video");
+            Sdk.module.content.updateModuleContent(
+              Number(prop?.body?.id),
+              prop?.type || "video"
+            );
           prop.refetch();
           toast("MCQ module unlocked", { type: "info" });
           return prop?.setValue(3);

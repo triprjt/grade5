@@ -11,4 +11,12 @@ This is a demo webapp for 5th grade kids. This app is hosted at https://grade5-2
 
 Hosting tools: Frontend is at firebase, Backend is at Railway, Database is at NeonDB(POSTGres)
 
+How to run locally?
+1. git clone https://github.com/triprjt/grade5.git
+2. cd Frontend
+3. npm install
+4. npm run dev
+5. go to localhost:5173/ to see the webapp.(The backend is live on Railway app hosting platform)
+
 Happy Learning !
+

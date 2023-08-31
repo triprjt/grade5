@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { IModule } from "@MyTypes/module.type";
 
 import { Sdk } from "@/services/sdk.service";
 
@@ -47,7 +48,9 @@ export default function SubjectDetails() {
   const isLocked = (idx: number) => {
     if (idx === 0) return false;
     const rest = data?.slice(0, idx);
-    const isAllCompleted = rest?.find((chapter) => chapter.is_completed == false);
+    const isAllCompleted = rest?.find(
+      (chapter) => chapter.is_completed == false
+    );
     return !!isAllCompleted;
   };
 
@@ -64,27 +67,35 @@ export default function SubjectDetails() {
   const getModuleColor = useCallback(
     (id: number) => {
       if (!moduleData) return;
-      const latCompleted = moduleData
-        .sort((a, b) => a.id - b.id)
-        .findLastIndex((el) => el.is_completed == true);
+      const sortedModules = moduleData.sort((a, b) => a.id - b.id);
+      const latCompleted = sortedModules.findIndex(
+        (el, idx, arr) =>
+          el.is_completed == true &&
+          (idx === arr.length - 1 || arr[idx + 1].is_completed == false)
+      );
       const tIndex = latCompleted + 1;
-      const targetIndex = moduleData.sort((a, b) => a.id - b.id).findIndex((el) => el.id == id);
+      const targetIndex = sortedModules.findIndex((el: IModule) => el.id == id); // specify the type here
       if (tIndex == targetIndex) return "orange";
-      const target = moduleData.find((el) => el.id == id);
+      const target = moduleData.find((el: IModule) => el.id == id); // specify the type here
       if (target?.is_completed) return "green";
       else return "ghostwhite";
     },
     [moduleData]
   );
 
-  const _handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const _handleChange =
+    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
   if (isLoading) return <Loading />;
 
   return (
     <Box p={6} pt={2} sx={{ alignItems: "start" }}>
-      <Button sx={{ mb: 2 }} onClick={() => navigate(-1)} startIcon={<ArrowBackIcon />}>
+      <Button
+        sx={{ mb: 2 }}
+        onClick={() => navigate(-1)}
+        startIcon={<ArrowBackIcon />}
+      >
         back
       </Button>
       {data
@@ -134,9 +145,17 @@ export default function SubjectDetails() {
                               onClick={() => {
                                 // console.log(isModuleLocker(idx), idx);
                                 !isModuleLocker(idx) &&
-                                  navigate(appRoutes._module_details(_modules.id));
-                                localStorage.setItem("chapter_id", JSON.stringify(chapter.id));
-                                localStorage.setItem("subject_id", JSON.stringify(id.id));
+                                  navigate(
+                                    appRoutes._module_details(_modules.id)
+                                  );
+                                localStorage.setItem(
+                                  "chapter_id",
+                                  JSON.stringify(chapter.id)
+                                );
+                                localStorage.setItem(
+                                  "subject_id",
+                                  JSON.stringify(id.id)
+                                );
                               }}
                               sx={{
                                 p: 1,
@@ -149,7 +168,9 @@ export default function SubjectDetails() {
                                 StepIconProps={{
                                   color: getModuleColor(_modules.id),
                                 }}
-                                StepIconComponent={isModuleLocker(idx) ? LockIcon : undefined}
+                                StepIconComponent={
+                                  isModuleLocker(idx) ? LockIcon : undefined
+                                }
                                 sx={{
                                   cursor: "pointer",
                                   ":hover": {

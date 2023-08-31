@@ -154,7 +154,8 @@ export default function McqModule({
       Sdk.subject.updateChapterProgress(+chapter_id);
       return navigate(appRoutes._subject_details(JSON.parse(subjectId || "")));
     }
-    const currentModuleIndex = sortedModule?.findIndex((el) => el.id == +(id || "")) || 0;
+    const currentModuleIndex =
+      sortedModule?.findIndex((el) => el.id == +(id || "")) || 0;
 
     if (currentModuleIndex >= 0) {
       const targetIndex = currentModuleIndex + 1;
@@ -167,8 +168,14 @@ export default function McqModule({
   // console.log(answeredArray, "answeredArray");
   return (
     <Stack gap={2} p={2} alignItems={"start"}>
-      {index + 1 - 1 > 0 && <Button onClick={handleBack}>previous question</Button>}
-      {answeredArray?.includes(index) ? <Button onClick={handleNext}>next question</Button> : ""}
+      {index + 1 - 1 > 0 && (
+        <Button onClick={handleBack}>previous question</Button>
+      )}
+      {answeredArray?.includes(index) ? (
+        <Button onClick={handleNext}>next question</Button>
+      ) : (
+        ""
+      )}
       <Stack>
         <Typography fontWeight={"600"}>
           {index + 1}: {(body?.questions || [])[index]?.question_title}
@@ -221,7 +228,7 @@ export default function McqModule({
               } else updateModule();
             }}
           >
-            {currentModule?.is_completed ? "next Chapter" : "complete module"}
+            {currentModule?.is_completed ? "next Module" : "complete module"}
           </Button>
         ) : (
           ""

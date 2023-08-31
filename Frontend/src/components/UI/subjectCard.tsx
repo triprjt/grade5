@@ -25,6 +25,16 @@ export default function SubjectCard(prop: ISubject) {
     4: "https://firebasestorage.googleapis.com/v0/b/grade5-2448a.appspot.com/o/3D_Animation_Style_A_minimalist_biology_cover_featuring_a_sing_0.jpeg?alt=media&token=788fc404-421c-4cbf-a4e5-730cbef5d39f",
   };
 
+  const paraMap = {
+    1: "A textbook of Physics for class 5",
+    2: "A textbook of Mathematics for class 5",
+    3: "A textbook of Chemistry for class 5",
+    4: "A textbook of Biology for class 5",
+  };
+  const paragraphText = paraMap.hasOwnProperty(prop.id)
+    ? paraMap[prop.id as keyof typeof paraMap]
+    : "Default description text"; // Replace this with your default text
+
   // Use prop.id instead of prop.name
   const imageUrl = urlMap.hasOwnProperty(prop.id)
     ? urlMap[prop.id as keyof typeof urlMap]
@@ -33,7 +43,12 @@ export default function SubjectCard(prop: ISubject) {
   return (
     <Card sx={{ maxWidth: 345 }} onClick={handleCardClick}>
       <CardActionArea>
-        <CardMedia component="img" height="140" image={imageUrl} alt={prop.name} />
+        <CardMedia
+          component="img"
+          height="140"
+          image={imageUrl}
+          alt={prop.name}
+        />
         <CardContent>
           <Typography
             sx={{ textTransform: "capitalize" }}
@@ -44,8 +59,7 @@ export default function SubjectCard(prop: ISubject) {
             {prop.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-            across all continents except Antarctica
+            {paragraphText}
           </Typography>
         </CardContent>
       </CardActionArea>

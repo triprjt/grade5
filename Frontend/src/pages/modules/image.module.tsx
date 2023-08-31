@@ -27,7 +27,10 @@ export default function ImageModule(
     const flag = swiper.activeIndex === (prop?.body?.image || []).length - 1;
     if (!flag) return;
     if (!prop?.body?.is_completed) {
-      Sdk.module.content.updateModuleContent(Number(prop?.body?.id), prop?.type || "image");
+      Sdk.module.content.updateModuleContent(
+        Number(prop?.body?.id),
+        prop?.type || "image"
+      );
       prop?.refetch();
       toast("video module unlocked", { type: "info" });
       return prop?.setValue(2);
@@ -37,13 +40,15 @@ export default function ImageModule(
   return (
     <Box pl={12} width={"70rem"} margin={"auto"}>
       <Swiper
-        modules={[Navigation, Pagination, Scrollbar, A11y]}
-        spaceBetween={50}
-        slidesPerView={1}
-        onSlideChange={updateImage}
-        onSwiper={(swiper) => console.log(swiper, "swiper")}
-        navigation
-        allowSlideNext
+        {...({
+          modules: [Navigation, Pagination, Scrollbar, A11y],
+          spaceBetween: 50,
+          slidesPerView: 1,
+          onSlideChange: updateImage,
+          // onSwiper: (swiper) => console.log(swiper, "swiper"),
+          navigation: true,
+          allowSlideNext: true,
+        } as any)}
       >
         {prop?.body?.image?.map((el) => {
           return (
